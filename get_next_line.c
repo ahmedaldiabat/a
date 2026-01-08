@@ -21,10 +21,7 @@ static char	*read_loop(int fd, char *stash, char *buffer)
 	{
 		bytes = read(fd, buffer, BUFFER_SIZE);
 		if (bytes < 0)
-		{
-			free(stash);
-			return (NULL);
-		}
+			return (free(stash), NULL);
 		buffer[bytes] = '\0';
 		stash = ft_strjoin(stash, buffer);
 		if (!stash)
@@ -68,10 +65,7 @@ static char	*clean_stash(char *stash)
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (!stash[i])
-	{
-		free(stash);
-		return (NULL);
-	}
+		return (free(stash), NULL);
 	new_stash = ft_substr(stash, i + 1,
 			ft_strlen(stash) - i - 1);
 	free(stash);
@@ -86,8 +80,8 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash = read_and_stash(fd, stash);
-	if (!stash)
-		return (NULL);
+	if (!stash || !stash[0])
+		return (free(stash), stash = NULL, NULL);
 	line = extract_line(stash);
 	stash = clean_stash(stash);
 	return (line);
